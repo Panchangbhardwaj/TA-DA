@@ -1,0 +1,243 @@
+#include<conio.h> 
+#include<iostream> 
+using namespace std; 
+
+const int MAX_VALID_YR = 9999; 
+const int MIN_VALID_YR = 1800;  
+struct TIME
+{
+  int minutes;
+  int hours;
+};
+void computeTimeDifference(struct TIME, struct TIME, struct TIME *);
+
+  
+struct Date 
+{ 
+	int d, m, y; 
+}; 
+ 
+const int monthDays[12] = {31, 28, 31, 30, 31, 30, 
+						31, 31, 30, 31, 30, 31}; 
+int countLeapYears(Date d) 
+{ 
+	int years = d.y; 
+	if (d.m <= 2) 
+		years--; 
+
+	return years / 4 - years / 100 + years / 400; 
+} 
+int getDifference(Date dt1, Date dt2) 
+{ 	long int n1 = dt1.y*365 + dt1.d; 
+    for (int i=0; i<dt1.m - 1; i++) 
+		n1 += monthDays[i]; 
+     	n1 += countLeapYears(dt1); 
+ 	long int n2 = dt2.y*365 + dt2.d; 
+	for (int i=0; i<dt2.m - 1; i++) 
+		n2 += monthDays[i]; 
+	n2 += countLeapYears(dt2); 
+ 	return (n2 - n1); 
+} 
+
+bool isLeap(int year) 
+{ 
+return (((year % 4 == 0) && 
+		(year % 100 != 0)) || 
+		(year % 400 == 0)); 
+}  
+bool isValidDate(int d, int m, int y,int h,int mn) 
+{   
+	if(h<=0||h>24)
+	return false;
+	if(mn<0||mn>=60)
+	
+    return false;	
+	if (y > MAX_VALID_YR || 
+		y < MIN_VALID_YR) 
+	return false; 
+	if (m < 1 || m > 12) 
+	return false; 
+	if (d < 1 || d > 31) 
+	return false; 
+    if (m == 2) 
+	{ 
+		if (isLeap(y)) 
+		return (d <= 29); 
+		else
+		return (d <= 28); 
+	} 
+	if (m == 4 || m == 6 || 
+		m == 9 || m == 11) 
+		return (d <= 30); 
+
+	return true; 
+} 
+  int  main(void) 
+{ int dd1,mm1,q,yy1,hh1,mn1,tadatotal=0,n;
+  int dd2,mm2,yy2,hh2,mn2;
+  float tada,basicta,basicda;
+  struct TIME t1, t2, difference;
+cout<<"ENTER DEPARTURE DATE IN (DD-MM-YYYY) FORMAT\n";
+cout<<"DAY\t";
+cin>>dd1;
+cout<<"MONTH\t";
+cin>>mm1;
+cout<<"YEAR\t";
+cin>>yy1;
+cout<<"ENTER DEPARTURE TIME IN (HOUR - MINUTE) FORMAT \n";
+cout<<"HOUR\t";
+cin>>hh1;
+cout<<"MINUTE\t";
+cin>>mn1;
+
+cout<<"ENTER ARRIVAL DATE IN DD-MM-YYYY FORMAT\n";
+cout<<"DAY\t";cin>>dd2;
+cout<<"MONTH\t";
+cin>>mm2;
+cout<<"YEAR\t";
+cin>>yy2;
+cout<<"ENTER ARRIVAL TIME IN (HOUR - MINUTE) FORMAT \n";
+cout<<"HOUR\t";
+cin>>hh2;
+cout<<"MINUTE\t";
+cin>>mn2;
+
+if(isValidDate(dd1,mm1,yy1,hh1,mn1)==false||isValidDate(dd2,mm2,yy2,hh2,mn2)==false)
+{ 	cout<<"ENTERED VALUE FOR DATE OT TIME IS NOT POSSIBLE PLEASE ENTER AGAIN \n";
+	cout<<"\n\tVALUES ENTER FOR DEPARTURE DATE AND ARRIVAL DATE ARE NOT CORRECT WRT DATABASE PLEASE CONTACT SYSTEM OBSERVER FOR UPDATION THANK YOU \n ";
+    return 0;
+}
+else
+{ 	if((dd2-dd1)<0||(mm2-mm1)<0||(yy2-yy1)<0)
+	{
+		cout<<" \nENTERED ARRIVAL DATE SHOULD COME AFTER DEPARTURE (DATE ARE INCORRECT)  \n";
+        return 0;	
+	}
+	else if(dd1==dd2&&mm1==mm2&&yy1==yy2&&(((hh2-hh1)<0)||((hh1==hh2)&&((mn2-mn1)<0))  )  )
+	{
+		cout<<"\nARRIVAL TIME ENTERED IS NOT POSSIBLE WRT DEPARTURE TIME PLEASE RECHECK THE ENTERED VALUE FOR TIME AGAIN ";
+	}
+	else
+	{
+			Date dt1 = {dd1,mm1,yy1}; 
+	        Date dt2 = {dd2,mm2,yy2}; 
+		cout << "DAYS TRAVELLED  = " << getDifference(dt1, dt2)+1; 
+		
+		if(dd1==dd2&&mm1==mm2&&yy1==yy2)
+		{
+		
+		t2.hours = hh1 ; 
+		t2.minutes= mn1;	
+	    t1.hours= hh2 ; 
+		t1.minutes= mn2;
+		computeTimeDifference(t1, t2, &difference);
+		cout << "\nTIME = " << difference.hours << ":" << difference.minutes << ":" ;
+	    if(difference.hours<6)
+	    {
+	    	
+			tadatotal=30;
+		}
+		else if(difference.hours>=6&&difference.hours<12)
+		{
+			tadatotal=70;
+		}
+		else
+		{
+			tadatotal=100;
+		}
+		}
+		else 
+		{
+		t2.hours = hh1 ; 
+		t2.minutes= mn1;	
+	    t1.hours= hh2 ; 
+		t1.minutes= mn2;
+				
+		
+		for(q=1;q<=getDifference(dt1, dt2)+1;q++)
+		{
+			
+			if(q==1)
+			{
+				
+		t2.hours = hh1 ; 
+		t2.minutes= mn1;	
+	    t1.hours= 24 ; 
+		t1.minutes=00;
+					computeTimeDifference(t1, t2, &difference);
+						    if(difference.hours<6)
+	    {
+	    	
+			tada=30;
+		}
+		else if(difference.hours>=6&&difference.hours<12)
+		{
+			tada=70;
+		}
+		else
+		{
+			tada=100;
+		}
+        
+			
+			tadatotal+=tada;				
+			}		
+		
+			
+			else if(q==(getDifference(dt1, dt2)+1))
+		
+			{
+				
+		t2.hours = 00 ; 
+		t2.minutes= 00;	
+	    t1.hours= hh2 ; 
+		t1.minutes=mn2;
+					computeTimeDifference(t1, t2, &difference);
+						    if(difference.hours<6)
+	    {
+	    	
+			tada=30;
+		}
+		else if(difference.hours>=6&&difference.hours<12)
+		{
+			tada=70;
+		}
+		else
+		{
+			tada=100;
+		}
+        
+			tadatotal+=tada;
+			}
+
+		else
+		{
+			tadatotal+=100;
+			
+		}
+		
+}
+}
+
+cout<<"\nYOUR TA/DA IS = "<<tadatotal<<" %";
+cout<<"\nENTER BASIC FOR TA = ";
+cin>>basicta;
+cout<<"\nENTER BASIC FOR DA = ";
+cin>>basicda;
+cout<<"TOTAL \nTA = "<<basicta*(tadatotal/100)<<"\n DA ="<<basicda*(tadatotal/100);}}
+
+cout<<"/t THANK YOU FOR USING TA/DA CALCULATOR BY PANCHANG BHARDWAJ \n\tGOVERNMENT ENGINEERING COLLAGE, AJMER\n  ";
+getch();
+} 
+
+void computeTimeDifference(struct TIME t1, struct TIME t2, struct TIME *difference)
+{
+    
+    if(t2.minutes > t1.minutes)
+    {
+        --t1.hours;
+        t1.minutes += 60;
+    }
+    difference->minutes = t1.minutes-t2.minutes;
+    difference->hours = t1.hours-t2.hours;
+}
